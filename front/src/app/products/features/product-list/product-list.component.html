@@ -8,9 +8,25 @@
             <p-card class="block mb-2">
                 <span class="font-medium text-secondary text-sm">{{ product.category }}</span>
                 <div class="text-lg font-medium text-900 mt-2">{{ product.name }}</div>
+                <div class="product-field">
+                  <img [src]="product.image" [alt]="product.name" />
+                </div>
+                <div class="product-field">
+                  <p [textContent]="product.description"></p>
+                </div>
+                <div class="product-field">
+                  <p [textContent]="'€'+product.price"></p>
+                </div>
+                <div class="product-field">
+                  <p [textContent]="product.category"></p>
+                </div>
+                <div class="product-field">
+                  <p [textContent]="product.inventoryStatus"></p>
+                </div>
 
                 <ng-template pTemplate="footer">
                     <div class="flex gap-3 mt-1">
+                        <p-button label="Afficher" severity="primary" (onClick)="onDisplay(product)"/>
                         <p-button label="Modifier" severity="secondary" (onClick)="onUpdate(product)"/>
                         <p-button label="Supprimer" severity="danger" (onClick)="onDelete(product)" />
                     </div>
@@ -27,5 +43,13 @@
         [product]="editedProduct()"
         (save)="onSave($event)"
         (cancel)="onCancel()"
+    />
+</p-dialog>
+
+<p-dialog [(visible)]="isDisplay"
+    [style]="{ width: '50vw' }"
+    [header]="displayedProduct().name">
+    <app-product-details
+    [product]="displayedProduct()"
     />
 </p-dialog>
