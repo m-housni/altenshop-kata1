@@ -6,11 +6,18 @@
         {{ title }}
     </div>
     <div class="p-toolbar-group-end">
-        <i class="pi pi-shopping-cart" style="font-size: 2rem"></i>
+      <div class="cart-container">
+        <!-- add route to cart -->
+        <a routerLink="/cart">
+          <i class="pi pi-shopping-cart" style="font-size: 2rem"></i>
+          <app-cart-badge></app-cart-badge>
+        </a>
+      </div>
+      <app-cart-badge></app-cart-badge>
     </div>
 </p-toolbar>
-<p-splitter 
-    [panelSizes]="[20, 80]" 
+<p-splitter
+    [panelSizes]="[20, 80]"
     [style]="{ height: 'calc(100vh - 100px)' }">
     <ng-template pTemplate>
         <div class="w-full">
