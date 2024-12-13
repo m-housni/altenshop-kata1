@@ -13,7 +13,9 @@
         <div class="col">{{ item[1] }}</div>
         <div class="col">{{ item[0].price }}</div>
         <div class="col">{{ item[1] *item[0].price }}</div>
-        <div class="col">X</div>
+        <div class="col">
+          <p-button label="Supprimer" severity="danger" (onClick)="onDelete(item[0])" />
+        </div>
       </div>
     }
   </div>

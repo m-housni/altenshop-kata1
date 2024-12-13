@@ -29,4 +29,12 @@ export class CartComponent {
       this.cart = products.map((p, index) => [p, quantities[index]])
     });
   }
+
+  public onDelete(product: Product) {
+    // delete product
+    this.cartService.removeProductFromCart(product).subscribe(cart => {
+
+    });
+    //alert("deleting product ..");
+  }
 }

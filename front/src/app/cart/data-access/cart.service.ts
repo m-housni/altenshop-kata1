@@ -35,4 +35,25 @@ export class CartService {
       map(cart => cart.size)
     );
   }
+
+  clearCart(): Observable<void> {
+    return new Observable<void>(observer => {
+      this.cart.clear();
+      this.cartSubject.next(this.cart); // Notify subscribers
+      observer.next();
+      observer.complete();
+    });
+  }
+
+  removeProductFromCart(product: Product): Observable<void> {
+    return new Observable<void>(observer => {
+      const existingProduct = Array.from(this.cart.keys()).find(p => p.id === product.id);
+      if (existingProduct) {
+        this.cart.delete(existingProduct);
+        this.cartSubject.next(this.cart); // Notify subscribers
+      }
+      observer.next();
+      observer.complete();
+    });
+  }
 }
