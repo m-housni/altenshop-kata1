@@ -1,0 +1,1 @@
+Import into Postman for streamlined api testing
