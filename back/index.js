@@ -7,10 +7,10 @@ const bcrypt = require('bcrypt');
 
 const app = express();
 const PORT = 3000;
-const DATA_FILE = 'products.json';
-const USERS_FILE = 'users.json';
-const CARTS_FILE = 'carts.json';
-const WISHLISTS_FILE = 'wishlists.json';
+const DATA_FILE = 'db/products.json';
+const USERS_FILE = 'db/users.json';
+const CARTS_FILE = 'db/carts.json';
+const WISHLISTS_FILE = 'db/wishlists.json';
 const SECRET_KEY = 'your-secret-key';
 
 app.use(bodyParser.json());
