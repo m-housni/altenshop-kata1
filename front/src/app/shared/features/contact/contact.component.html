@@ -1,16 +1,17 @@
 <p-card header="Contact" class="block m-2 text-left">
   <div class="m-0">
+    <!-- form -->
     <form class="p-fluid p-formgrid p-grid">
       <div class="p-field p-col-12">
       <label for="email" class="p-col-12 p-md-2">Email</label>
       <div class="p-col-12 p-md-10">
-        <input id="email" type="email" pInputText class="p-inputtext p-component" />
+        <input id="email" type="email" pInputText class="p-inputtext p-component" required />
       </div>
       </div>
       <div class="p-field p-col-12">
       <label for="message" class="p-col-12 p-md-2">Message</label>
       <div class="p-col-12 p-md-10">
-        <textarea id="message" rows="5" pInputTextarea class="p-inputtextarea p-component"></textarea>
+        <textarea id="message" rows="5" pInputTextarea class="p-inputtextarea p-component" required maxlength="300"></textarea>
       </div>
       </div>
       <div class="p-field p-col-12 p-md-10 p-offset-md-2">
