@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "username": "testuser",
+    "firstname": "Test",
+    "email": "user@test.com",
+    "password": "$2b$10$q8eZraL9//FXcXeeafPtjeVHLxe.goGnEtJB0RXGJCTCzamCOgAVK"
+  },
+  {
+    "id": 2,
+    "username": "adminuser",
+    "firstname": "Admin",
+    "email": "admin@admin.com",
+    "password": "$2b$10$mFEMnt8spcPU7oEyDZARV.gmOlhGtlVqoo3LrDKlGMyPh6oN9GuCm"
+  }
+]
