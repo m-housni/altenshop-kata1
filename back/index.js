@@ -9,6 +9,8 @@ const app = express();
 const PORT = 3000;
 const DATA_FILE = 'products.json';
 const USERS_FILE = 'users.json';
+const CARTS_FILE = 'carts.json';
+const WISHLISTS_FILE = 'wishlists.json';
 const SECRET_KEY = 'your-secret-key';
 
 app.use(bodyParser.json());
@@ -33,6 +35,32 @@ const loadUsers = () => {
 
 const saveUsers = (users) => {
     fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
+};
+
+// Utility functions for carts
+const loadCarts = () => {
+    if (!fs.existsSync(CARTS_FILE)) return {};
+    const data = fs.readFileSync(CARTS_FILE);
+    const carts = JSON.parse(data);
+    console.log("loadCarts", carts);
+    return carts;
+};
+
+const saveCarts = (carts) => {
+    console.log("saveCarts", carts);
+    fs.writeFileSync(CARTS_FILE, JSON.stringify(carts, null, 2));
+};
+
+// Utility functions for wishlists
+const loadWishlists = () => {
+    if (!fs.existsSync(WISHLISTS_FILE)) return {};
+    const data = fs.readFileSync(WISHLISTS_FILE);
+    const wishlists = JSON.parse(data);
+    return wishlists;
+};
+
+const saveWishlists = (wishlists) => {
+    fs.writeFileSync(WISHLISTS_FILE, JSON.stringify(wishlists, null, 2));
 };
 
 // Middleware to verify JWT token
@@ -143,6 +171,68 @@ app.delete('/products/:id', authenticateToken, isAdmin, (req, res) => {
 
     products.splice(productIndex, 1);
     saveProducts(products);
+    res.status(204).send();
+});
+
+// API to manage cart
+app.post('/cart', authenticateToken, (req, res) => {
+    const carts = loadCarts();
+    const userCart = carts[req.user.id] || [];
+
+    const { productId, quantity } = req.body;
+    const existingItem = userCart.find(item => item.productId === productId);
+
+    if (existingItem) {
+        existingItem.quantity += quantity;
+    } else {
+        userCart.push({ productId, quantity });
+    }
+
+    carts[req.user.id] = userCart;
+    saveCarts(carts);
+    res.status(200).json(userCart);
+});
+
+app.get('/cart', authenticateToken, (req, res) => {
+    const carts = loadCarts();
+    res.json(carts[req.user.id] || []);
+});
+
+app.delete('/cart/:productId', authenticateToken, (req, res) => {
+    const carts = loadCarts();
+    const userCart = carts[req.user.id] || [];
+
+    carts[req.user.id] = userCart.filter(item => item.productId !== parseInt(req.params.productId));
+    saveCarts(carts);
+    res.status(204).send();
+});
+
+// API to manage wishlist
+app.post('/wishlist', authenticateToken, (req, res) => {
+    const wishlists = loadWishlists();
+    const userWishlist = wishlists[req.user.id] || [];
+
+    const { productId } = req.body;
+    if (!userWishlist.includes(productId)) {
+        userWishlist.push(productId);
+    }
+
+    wishlists[req.user.id] = userWishlist;
+    saveWishlists(wishlists);
+    res.status(200).json(userWishlist);
+});
+
+app.get('/wishlist', authenticateToken, (req, res) => {
+    const wishlists = loadWishlists();
+    res.json(wishlists[req.user.id] || []);
+});
+
+app.delete('/wishlist/:productId', authenticateToken, (req, res) => {
+    const wishlists = loadWishlists();
+    const userWishlist = wishlists[req.user.id] || [];
+
+    wishlists[req.user.id] = userWishlist.filter(id => id !== parseInt(req.params.productId));
+    saveWishlists(wishlists);
     res.status(204).send();
 });
 
