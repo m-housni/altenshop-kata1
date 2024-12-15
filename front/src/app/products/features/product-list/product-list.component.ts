@@ -8,6 +8,8 @@ import { ButtonModule } from "primeng/button";
 import { CardModule } from "primeng/card";
 import { DataViewModule } from 'primeng/dataview';
 import { DialogModule } from 'primeng/dialog';
+import { PaginatorModule } from 'primeng/paginator';
+import { FormsModule } from '@angular/forms';
 
 const emptyProduct: Product = {
   id: 0,
@@ -31,7 +33,7 @@ const emptyProduct: Product = {
   templateUrl: "./product-list.component.html",
   styleUrls: ["./product-list.component.scss"],
   standalone: true,
-  imports: [DataViewModule, CardModule, ButtonModule, DialogModule, ProductFormComponent, ProductDetailsComponent],
+  imports: [DataViewModule, CardModule, ButtonModule, DialogModule, ProductFormComponent, ProductDetailsComponent, PaginatorModule, FormsModule],
 })
 export class ProductListComponent implements OnInit {
   private readonly productsService = inject(ProductsService);
@@ -45,11 +47,14 @@ export class ProductListComponent implements OnInit {
   public readonly editedProduct = signal<Product>(emptyProduct);
   public readonly displayedProduct = signal<Product>(emptyProduct);
 
+  public first = 0;
+  public rows = 10;
+
+  public filterText = '';
+
   ngOnInit() {
     this.productsService.get().subscribe();
   }
-
-
 
   public onCreate() {
     this.isCreation = true;
@@ -92,5 +97,17 @@ export class ProductListComponent implements OnInit {
   public addToCart(product: Product) {
     this.cartService.addProductToCart(product);
     console.log(`${product.name} added to cart`);
+  }
+
+  public onPageChange(event: any) {
+    this.first = event.first;
+    this.rows = event.rows;
+  }
+
+  public get filteredProducts() {
+    return this.products().filter(product =>
+      product.name.toLowerCase().includes(this.filterText.toLowerCase()) ||
+      product.category.toLowerCase().includes(this.filterText.toLowerCase())
+    );
   }
 }
