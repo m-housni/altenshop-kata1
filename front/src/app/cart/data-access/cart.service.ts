@@ -7,26 +7,38 @@ import { map } from 'rxjs/operators'; // Import map
   providedIn: 'root'
 })
 export class CartService {
-  private cart: Map<Product, number> = new Map();
-  private cartSubject: BehaviorSubject<Map<Product, number>> = new BehaviorSubject<Map<Product, number>>(this.cart);
+  private cart: Map<number, { product: Product, quantity: number }> = new Map();
+  private cartSubject: BehaviorSubject<Map<number, { product: Product, quantity: number }>> = new BehaviorSubject<Map<number, { product: Product, quantity: number }>>(this.cart);
 
-  addProductToCart(product: Product): void {
-    const existingProduct = Array.from(this.cart.keys()).find(p => p.id === product.id);
-    if (existingProduct) {
-      this.cart.set(existingProduct, this.cart.get(existingProduct)! + 1);
+  addProductToCart(product: Product, quantity: number = 1): void {
+    if (this.cart.has(product.id)) {
+      const cartItem = this.cart.get(product.id)!;
+      cartItem.quantity += quantity;
     } else {
-      this.cart.set(product, 1);
+      this.cart.set(product.id, { product, quantity });
     }
     this.cartSubject.next(this.cart); // Notify subscribers
   }
 
-  getCart(): Observable<Map<Product, number>> {
+  decreaseProductQuantity(product: Product, quantity: number = 1): void {
+    if (this.cart.has(product.id)) {
+      const cartItem = this.cart.get(product.id)!;
+      if (cartItem.quantity > quantity) {
+        cartItem.quantity -= quantity;
+      } else {
+        this.cart.delete(product.id);
+      }
+      this.cartSubject.next(this.cart); // Notify subscribers
+    }
+  }
+
+  getCart(): Observable<Map<number, { product: Product, quantity: number }>> {
     return this.cartSubject.asObservable();
   }
 
   getCartCount(): Observable<number> {
     return this.cartSubject.asObservable().pipe(
-      map(cart => Array.from(cart.values()).reduce((acc, quantity) => acc + quantity, 0))
+      map(cart => Array.from(cart.values()).reduce((acc, item) => acc + item.quantity, 0))
     );
   }
 
@@ -47,11 +59,8 @@ export class CartService {
 
   removeProductFromCart(product: Product): Observable<void> {
     return new Observable<void>(observer => {
-      const existingProduct = Array.from(this.cart.keys()).find(p => p.id === product.id);
-      if (existingProduct) {
-        this.cart.delete(existingProduct);
-        this.cartSubject.next(this.cart); // Notify subscribers
-      }
+      this.cart.delete(product.id);
+      this.cartSubject.next(this.cart); // Notify subscribers
       observer.next();
       observer.complete();
     });

@@ -13,28 +13,32 @@ import { Product } from "app/products/data-access/product.model";
   imports: [CardModule, RouterLink, ButtonModule],
 })
 export class CartComponent {
-
-
   private readonly cartService = inject(CartService);
-  public products: Product[] = [];
-  public quantities: number[] = [];
-  public cart: any[] = [];
+  public cart: { product: Product, quantity: number }[] = [];
 
   constructor() {
+    this.loadCart();
+  }
+
+  private loadCart() {
     this.cartService.getCart().subscribe(cart => {
-      let products = Array.from(cart.keys());
-      let quantities = Array.from(cart.values());
-      this.products = products;
-      this.quantities = quantities;
-      this.cart = products.map((p, index) => [p, quantities[index]])
+      this.cart = Array.from(cart.values());
     });
   }
 
   public onDelete(product: Product) {
-    // delete product
-    this.cartService.removeProductFromCart(product).subscribe(cart => {
-
+    this.cartService.removeProductFromCart(product).subscribe(() => {
+      this.loadCart();
     });
-    //alert("deleting product ..");
+  }
+
+  public increaseQuantity(product: Product) {
+    this.cartService.addProductToCart(product, 1);
+    this.loadCart();
+  }
+
+  public decreaseQuantity(product: Product) {
+    this.cartService.decreaseProductQuantity(product, 1);
+    this.loadCart();
   }
 }

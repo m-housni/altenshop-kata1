@@ -95,8 +95,8 @@ export class ProductListComponent implements OnInit {
   }
 
   public addToCart(product: Product) {
-    this.cartService.addProductToCart(product);
-    console.log(`${product.name} added to cart`);
+    this.cartService.addProductToCart(product, product.quantity);
+    console.log(`${product.name} with quantity ${product.quantity} added to cart`);
   }
 
   public onPageChange(event: any) {
@@ -109,5 +109,25 @@ export class ProductListComponent implements OnInit {
       product.name.toLowerCase().includes(this.filterText.toLowerCase()) ||
       product.category.toLowerCase().includes(this.filterText.toLowerCase())
     );
+  }
+
+  // Method to increase the quantity of a product
+  public increaseQuantity(product: Product) {
+    if (product.quantity === undefined || product.quantity === null) {
+      product.quantity = 0;
+    }
+    product.quantity += 1;
+    this.productsService.update(product).subscribe();
+  }
+
+  // Method to decrease the quantity of a product
+  public decreaseQuantity(product: Product) {
+    if (product.quantity === undefined || product.quantity === null) {
+      product.quantity = 0;
+    }
+    if (product.quantity > 0) {
+      product.quantity -= 1;
+      this.productsService.update(product).subscribe();
+    }
   }
 }

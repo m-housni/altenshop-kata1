@@ -28,6 +28,11 @@
                 <div class="product-field">
                   <p [textContent]="product.inventoryStatus"></p>
                 </div>
+                <div class="product-field">
+                  <p-button icon="pi pi-minus" (onClick)="decreaseQuantity(product)" class="p-button-rounded p-button-text"></p-button>
+                  <span>{{ product.quantity || 0 }}</span>
+                  <p-button icon="pi pi-plus" (onClick)="increaseQuantity(product)" class="p-button-rounded p-button-text"></p-button>
+                </div>
 
                 <ng-template pTemplate="footer">
                     <div class="flex gap-3 mt-1">
