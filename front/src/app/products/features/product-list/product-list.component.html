@@ -1,10 +1,10 @@
 <h1 class="text-center">Liste des produits</h1>
 
-<div class="text-center">
-  <input type="text" [(ngModel)]="filterText" placeholder="Filter products..." />
-</div>
-
 <p-button label="Créer produit" (onClick)="onCreate()" class="block text-center"/>
+
+<div class="text-center mt-2">
+  <input type="text" [(ngModel)]="filterText" placeholder="Filtrer par (nom, category)" />
+</div>
 
 <p-paginator [rows]="rows" [totalRecords]="filteredProducts.length" [first]="first" (onPageChange)="onPageChange($event)"></p-paginator>
 <p-dataView #dv [value]="filteredProducts" [paginator]="true" [rows]="rows" [first]="first" (onPage)="onPageChange($event)">
@@ -12,7 +12,7 @@
         @for (product of products; track product) {
             <p-card class="block mb-2">
                 <span class="font-medium text-secondary text-sm">{{ product.category }}</span>
-                <div class="text-lg font-medium text-900 mt-2">{{ product.name }}</div>
+                <div class="text-lg font-medium text-900 mt-2 pointer" (click)="onDisplay(product)">{{ product.name }}</div>
                 <div class="product-field">
                   <img [src]="product.image" [alt]="product.name" />
                 </div>
@@ -28,18 +28,19 @@
                 <div class="product-field">
                   <p [textContent]="product.inventoryStatus"></p>
                 </div>
-                <div class="product-field">
-                  <p-button icon="pi pi-minus" (onClick)="decreaseQuantity(product)" class="p-button-rounded p-button-text"></p-button>
-                  <span>{{ product.quantity || 0 }}</span>
-                  <p-button icon="pi pi-plus" (onClick)="increaseQuantity(product)" class="p-button-rounded p-button-text"></p-button>
-                </div>
 
                 <ng-template pTemplate="footer">
-                    <div class="flex gap-3 mt-1">
-                        <p-button label="Afficher" severity="primary" (onClick)="onDisplay(product)"/>
-                        <p-button label="Modifier" severity="secondary" (onClick)="onUpdate(product)"/>
-                        <p-button label="Supprimer" severity="danger" (onClick)="onDelete(product)" />
-                        <p-button label="Ajouter au panier" severity="warning" (onClick)="addToCart(product)" />
+                    <div class="flex gap-3 mt-1 justify-content-between">
+                        <div>
+                          <p-button label="Modifier" severity="secondary" (onClick)="onUpdate(product)"/>
+                          &nbsp;<p-button label="Supprimer" severity="danger" (onClick)="onDelete(product)" />
+                        </div>
+                        <div>
+                          <p-button icon="pi pi-minus" [rounded]="true" [text]="true" (onClick)="decreaseQuantity(product)"></p-button>
+                          &nbsp;<p-button label="{{ product.quantity || 0 }}" variant="outlined" severity="info"></p-button>
+                          &nbsp;<p-button icon="pi pi-plus" [rounded]="true" [text]="true"  (onClick)="increaseQuantity(product)"></p-button>
+                          &nbsp;<p-button label="Ajouter au panier" severity="warning" (onClick)="addToCart(product)" />
+                        </div>
                     </div>
                 </ng-template>
             </p-card>

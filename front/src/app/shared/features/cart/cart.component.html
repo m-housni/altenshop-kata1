@@ -11,9 +11,9 @@
       <div class="grid">
         <div class="col">{{ item.product.name }}</div>
         <div class="col">
-          <p-button icon="pi pi-minus" (onClick)="decreaseQuantity(item.product)" class="p-button-rounded p-button-text"></p-button>
-          <span>{{ item.quantity }}</span>
-          <p-button icon="pi pi-plus" (onClick)="increaseQuantity(item.product)" class="p-button-rounded p-button-text"></p-button>
+          <p-button icon="pi pi-minus" [rounded]="true" [text]="true" (onClick)="decreaseQuantity(item.product)"></p-button>
+          <p-button label="{{ item.quantity }}" variant="outlined" severity="info"></p-button>
+          <p-button icon="pi pi-plus" [rounded]="true" [text]="true"  (onClick)="increaseQuantity(item.product)"></p-button>
         </div>
         <div class="col">{{ item.product.price }}</div>
         <div class="col">{{ item.quantity * item.product.price }}</div>
