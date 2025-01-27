@@ -1,6 +1,8 @@
 # e-commerce-angular-node
 This project is a comprehensive e-commerce platform development task that involves both front-end and back-end responsibilities.
 
+![image](https://github.com/user-attachments/assets/4d9f3820-5bf7-4a54-8c66-a78ba197caed)
+
 ### Front-end:
 - **Shop Features**: 
   - Display product details on a list
